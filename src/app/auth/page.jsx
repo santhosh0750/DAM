@@ -1,6 +1,6 @@
 "use client";
-import { Box, Button, Grid2, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Button, Grid2, Slide, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import useThemeColor from "../../hooks/useThemeColor";
 import Emailandpassword from "./components/Emailandpassword";
@@ -11,7 +11,13 @@ function page() {
 
   //usestate
   const [Screen, setScreen] = useState(false);
+  const [visiable,setvisiable] =useState(false)
 
+  useEffect(()=>{
+    if(Screen){
+      setvisiable(true)
+    }
+  },[Screen])
   return (
     <Grid2
       container
@@ -19,6 +25,7 @@ function page() {
       sx={{
         justifyContent: "center",
         alignItems: "center",
+        mt:4
       }}
     >
       <Image
@@ -44,12 +51,19 @@ function page() {
             display: "flex",
             justifyContent: "center",
             mt: 1,
+            minHeight:"200px"
           }}
         >
+           
           {!Screen ? (
             <Emailandpassword Screen={Screen} setScreen={setScreen} />
           ) : (
+            <Slide in={visiable} direction="left" timeout={500} >
+              <div style={{width:"100%"}} >
+
             <LoginOtp Screen={Screen} setScreen={setScreen} />
+              </div>
+         </Slide>
           )}
         </Box>
       </Grid2>

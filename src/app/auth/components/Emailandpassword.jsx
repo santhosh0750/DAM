@@ -51,7 +51,7 @@ export default function Emailandpassword({ Screen, setScreen }) {
         size={"medium"}
         label="Password"
         variant="outlined"
-        sx={{ mt: 1 }}
+        sx={{ mt: 2 }}
         type="email"
       />
       <Grid2
@@ -59,7 +59,7 @@ export default function Emailandpassword({ Screen, setScreen }) {
         sx={{
           display: "flex",
           justifyContent: "end",
-          mt: 1,
+          mt: 2,
         }}
       >
         <Typography
@@ -73,12 +73,12 @@ export default function Emailandpassword({ Screen, setScreen }) {
       <Button
         variant="contained"
         fullWidth
-        sx={{ mt: 1 }}
+        sx={{ mt: 2 }}
         onClick={() => emailvalidapi()}
       >
         Sign In
       </Button>
-      <Grid2 sx={{ mt: 2 }}>
+      <Grid2 sx={{ mt: 3 }}>
         <Typography variant="body2">
           ////////////////////////////////////////////////
         </Typography>
