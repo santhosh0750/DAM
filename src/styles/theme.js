@@ -10,7 +10,7 @@ export const lightTheme = createTheme({
       main: "#D9E1F7",
     },
     text: {
-      primary: "#292D32",
+      primary: "#292d32",
       secondary: "#667085",
       optional: "#54575B",
     },
@@ -19,27 +19,41 @@ export const lightTheme = createTheme({
     fontFamily: "Inter, sans-serif",
   },
   components: {
-    MuiTextField: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          fontFamily: "Inter, sans-serif",
+          fontSize: 14,
+        },
+      },
+    },
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 8, // Rounded corners
-            "& fieldset": {
-              borderColor: "#A1A1AA", // Primary border
-            },
-            "&:hover fieldset": {
-              borderColor: "#D9E1F7", // Darker blue on hover
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#1E3A8A", // Focused state
-            },
+          borderRadius: 7, // Rounded corners
+          "& fieldset": {
+            borderColor: "#A1A1AA", // Primary border
+            padding: "15px 10px",
           },
-          "& .MuiInputLabel-root": {
-            color: "#292D3299", // Custom label color
+          "&:hover fieldset": {
+            borderColor: "1E3A8A", // Darker blue on hover
             fontFamily: "Inter, sans-serif",
           },
-          "& .MuiInputLabel-root.Mui-focused": {
-            color: "#0d47a1", // Label color when focused
+          "&.Mui-focused fieldset": {
+            borderColor: "#1E3A8A", // Focused state
+            fontFamily: "Inter, sans-serif",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#292D3299", // Default color
+          fontFamily: "Inter, sans-serif",
+          fontSize: 15,
+          "&.Mui-focused": {
+            color: "#0d47a1", // Focused state
             fontFamily: "Inter, sans-serif",
           },
         },
@@ -48,20 +62,34 @@ export const lightTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 10, // Rounded corners
+          borderRadius: "10px", // Ensuring string for consistency
           textTransform: "none", // Disable uppercase text
-          fontWeight: 400, // Make text bold
+          fontWeight: 400, // Normal font weight
           fontFamily: "Inter, sans-serif",
-          padding: "10px 20px", // Increase button padding
           transition: "all 0.3s ease-in-out",
           backgroundColor: "#1E3A8A",
+          color: "#fff",
           "&:hover": {
             backgroundColor: "#314e97", // Darker shade on hover
+            color: "#fff",
           },
           "&.Mui-disabled": {
             backgroundColor: "#7087bb",
             color: "#F7F7F7",
           },
+          "&.MuiButton-sizeSmall": {
+            padding: "3px 12px !important",
+          },
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Inter, sans-serif", // Your preferred font
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
+          textRendering: "optimizeLegibility",
         },
       },
     },

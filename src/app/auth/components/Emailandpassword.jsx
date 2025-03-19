@@ -1,14 +1,61 @@
-import { Button, Grid2, TextField, Typography } from "@mui/material";
-import React from "react";
+import {
+  Button,
+  Grid2,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import useThemeColor from "../../../hooks/useThemeColor";
 import { toast } from "react-toastify";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Loginapi } from "../../../Services/loginapis";
+import { validateEmail } from "../../../utlis/CommonFunctions";
+import { useSelector } from "react-redux";
 
 export default function Emailandpassword({ Screen, setScreen }) {
   const { primary, secondary, text, textsecondary } = useThemeColor();
-  const emailvalidapi = () => {
-    setScreen(!Screen);
-    toast.success("Otp Send Successfully");
+
+  //usestates
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [PasswordShow, SetPasswordShow] = useState(false);
+
+  const userInfo = useSelector((state) => state.user);
+
+  //apiss
+  const credentialcheck = async () => {
+    let checkemail = validateEmail(Email.trim());
+    if (Password.trim() === "" || Email.trim === "") {
+      toast.error("Kindly Fill The Required Fields");
+      return;
+    }
+    if (!checkemail) {
+      toast.error("Kindly Check the Email Address");
+      return;
+    }
+    try {
+      const { data } = await Loginapi({
+        email: Email.trim(),
+        password: Password.trim(),
+      });
+      if (data.status === "success") {
+        localStorage.setItem("verfiy", JSON.stringify(data));
+        toast.success(data.message);
+        setScreen(!Screen);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("LoginAPI", error);
+    }
   };
+
+  useEffect(() => {
+    // dataapi();
+  }, []);
   return (
     <Grid2
       container
@@ -45,14 +92,40 @@ export default function Emailandpassword({ Screen, setScreen }) {
         variant="outlined"
         sx={{ mt: 2 }}
         type="email"
+        value={Email}
+        onChange={(e) => {
+          setEmail(e.target.value);
+        }}
       />
       <TextField
         fullWidth
         size={"medium"}
         label="Password"
         variant="outlined"
-        sx={{ mt: 2 }}
-        type="email"
+        sx={{ mt: 2, background: "#e8f0fe" }}
+        value={Password}
+        onChange={(e) => setPassword(e.target.value)}
+        type={PasswordShow ? "text" : "password"}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            credentialcheck();
+          }
+        }}
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => SetPasswordShow(!PasswordShow)}>
+                  {PasswordShow ? (
+                    <VisibilityOff sx={{ color: primary }} />
+                  ) : (
+                    <Visibility sx={{ color: primary }} />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
+        }}
       />
       <Grid2
         size={12}
@@ -65,7 +138,11 @@ export default function Emailandpassword({ Screen, setScreen }) {
         <Typography
           variant="body1"
           color={textsecondary}
-          sx={{ fontWeight: 400, "&:hover": { color: primary } }}
+          sx={{
+            fontWeight: 400,
+            "&:hover": { color: primary },
+            cursor: "pointer",
+          }}
         >
           Forget Password?
         </Typography>
@@ -74,7 +151,7 @@ export default function Emailandpassword({ Screen, setScreen }) {
         variant="contained"
         fullWidth
         sx={{ mt: 2 }}
-        onClick={() => emailvalidapi()}
+        onClick={() => credentialcheck()}
       >
         Sign In
       </Button>

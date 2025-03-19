@@ -3,23 +3,53 @@ import React, { useEffect, useState } from "react";
 import useThemeColor from "../../../hooks/useThemeColor";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useRouter } from "next/navigation";
+import { Resendotp, verfiyOTP } from "../../../Services/loginapis";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function LoginOtp({ Screen, setScreen }) {
+  const dispatch = useDispatch();
   const { primary, secondary, text, textsecondary } = useThemeColor();
   const router = useRouter();
+  let localvalue = JSON.parse(localStorage.getItem("verfiy"));
 
+  const userInfo = useSelector((state) => state.user);
+  console.log("userInfo", userInfo.token);
   //usestate
   const [otp, setotp] = useState("");
   const [count, setCount] = useState(30);
-  const [timer, setTimer] = useState(null);
 
   //function
-  const otpcall = (value) => {
-    router.push("user");
+  const otpcall = async (value) => {
+    const { data } = await verfiyOTP({
+      email: localvalue.Email,
+      otp: value,
+    });
+    if (data.status === "success") {
+      localStorage.setItem("token", data.token);
+      dispatch({
+        type: "LOGIN",
+        data: data,
+      });
+      toast.success(data.message);
+      router.push("assets");
+      setTimeout(() => {
+        localStorage.removeItem("verfiy");
+      }, 2000);
+    } else {
+      toast.error(data.message);
+    }
   };
-  const resendotpfun = () => {
-    console.log("hii");
-    setCount(30);
+  const resendotpfun = async () => {
+    const { data } = await Resendotp({
+      email: localvalue.Email,
+    });
+    if (data.status == "success") {
+      toast.success("OTP Sent Successfully");
+      setCount(30);
+    } else {
+      toast.error("Something Went Wrong");
+    }
   };
   useEffect(() => {
     if (count === 0) return;
@@ -29,6 +59,7 @@ export default function LoginOtp({ Screen, setScreen }) {
 
     return () => clearInterval(interval);
   }, [count]);
+  useEffect(() => {}, []);
   return (
     <Grid2
       container
@@ -54,7 +85,7 @@ export default function LoginOtp({ Screen, setScreen }) {
         }}
       >
         <Typography variant="body1" color={text} sx={{ fontWeight: 400 }}>
-          Please enter OTP sent on
+          Please enter OTP sent on {localvalue.authType}
         </Typography>
       </Grid2>
 
@@ -95,7 +126,7 @@ export default function LoginOtp({ Screen, setScreen }) {
           <Typography
             variant="body1"
             color={textsecondary}
-            sx={{ "&:hover": { color: primary } }}
+            sx={{ "&:hover": { color: primary }, cursor: "pointer" }}
             onClick={() => count == 0 && resendotpfun()}
           >
             Resend{" "}

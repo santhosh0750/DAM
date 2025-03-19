@@ -9,5 +9,6 @@ export default function useThemeColor() {
     secondary: theme.palette.secondary.main,
     text: theme.palette.text.primary,
     textsecondary: theme.palette.text.secondary,
+    optional: theme.palette.text.optional,
   };
 }

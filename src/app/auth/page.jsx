@@ -1,5 +1,12 @@
 "use client";
-import { Box, Button, Grid2, Slide, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid2,
+  Slide,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import useThemeColor from "../../hooks/useThemeColor";
@@ -11,13 +18,13 @@ function page() {
 
   //usestate
   const [Screen, setScreen] = useState(false);
-  const [visiable,setvisiable] =useState(false)
+  const [visiable, setvisiable] = useState(false);
 
-  useEffect(()=>{
-    if(Screen){
-      setvisiable(true)
+  useEffect(() => {
+    if (Screen) {
+      setvisiable(true);
     }
-  },[Screen])
+  }, [Screen]);
   return (
     <Grid2
       container
@@ -25,7 +32,7 @@ function page() {
       sx={{
         justifyContent: "center",
         alignItems: "center",
-        mt:4
+        mt: 3,
       }}
     >
       <Image
@@ -33,7 +40,7 @@ function page() {
         width={100}
         height={100}
         alt="Main Image"
-        style={{ marginTop: "15px" }}
+        style={{ marginTop: "10px" }}
         priority
       />
       <Grid2 size={12} sx={{ display: "flex", justifyContent: "center" }}>
@@ -41,7 +48,7 @@ function page() {
           Digital Assets Management
         </Typography>
       </Grid2>
-      <Grid2 size={{ md: 3.8, xs: 12 }} sx={{ mt: 3 }}>
+      <Grid2 size={{ md: 3.8, xs: 12 }} sx={{ mt: 2 }}>
         <Box
           sx={{
             background: "#fff",
@@ -51,19 +58,16 @@ function page() {
             display: "flex",
             justifyContent: "center",
             mt: 1,
-            minHeight:"200px"
           }}
         >
-           
           {!Screen ? (
             <Emailandpassword Screen={Screen} setScreen={setScreen} />
           ) : (
-            <Slide in={visiable} direction="left" timeout={500} >
-              <div style={{width:"100%"}} >
-
-            <LoginOtp Screen={Screen} setScreen={setScreen} />
+            <Slide in={visiable} direction="left" timeout={500}>
+              <div style={{ width: "100%" }}>
+                <LoginOtp Screen={Screen} setScreen={setScreen} />
               </div>
-         </Slide>
+            </Slide>
           )}
         </Box>
       </Grid2>

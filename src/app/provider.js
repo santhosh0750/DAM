@@ -7,7 +7,11 @@ import { lightTheme, darkTheme } from "../styles/theme";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
+import dynamic from "next/dynamic";
 
+const ReduxProvider = dynamic(() => import("@/redux/provider"), {
+  ssr: false,
+});
 export default function Providers({ children }) {
   const [darkMode, setDarkMode] = useState(false);
   useEffect(() => {
@@ -24,21 +28,23 @@ export default function Providers({ children }) {
     });
   };
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <CssBaseline />
-      <ToastContainer
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Bounce}
-      />
-      {children}
-    </ThemeProvider>
+    <ReduxProvider>
+      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+        <CssBaseline />
+        <ToastContainer
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Bounce}
+        />
+        {children}
+      </ThemeProvider>
+    </ReduxProvider>
   );
 }

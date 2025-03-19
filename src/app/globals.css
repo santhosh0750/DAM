@@ -31,12 +31,12 @@ body {
 .Toastify__toast--success {
   color: #fff !important;
   background: #1e3a8a !important;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .Toastify__toast--error {
   color: #fff !important;
-  background: #f11111 !important;
+  background: #ff5252 !important;
   font-weight: 700 !important;
 }
 /* //scrool */
