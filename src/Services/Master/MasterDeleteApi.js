@@ -10,3 +10,7 @@ export const RoleDeleteAPI = (id) => {
 export const UserGroupdeleteAPI = (id) => {
   return axiosInstance.get(`/userGroup/delete/${id}`);
 };
+
+export const ProjectdeleteAPI = (id) => {
+  return axiosInstance.get(`/project/deleteProject/${id}`);
+};

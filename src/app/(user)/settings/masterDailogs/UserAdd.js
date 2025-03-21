@@ -15,11 +15,25 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import useThemeColor from "@/hooks/useThemeColor";
+import {
+  RolelistAPI,
+  TeamlistAPI,
+  UsergrouplistAPI,
+} from "@/Services/Master/MasterlistApi";
+import { dynamicSort, validateEmail } from "@/utlis/CommonFunctions";
+import { AddUser } from "@/Services/Master/MasterAddApi";
+import { toast } from "react-toastify";
+import { UserEdit } from "@/Services/Master/MasterEditApi";
 
-export default function UserAdd({ Addopen, setAddopen }) {
+export default function UserAdd({
+  Addopen,
+  setAddopen,
+  EditData,
+  setEditData,
+}) {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -28,134 +42,176 @@ export default function UserAdd({ Addopen, setAddopen }) {
       return;
     }
     setAddopen(false);
+    closefun();
   };
-  const top100Films = [
-    { label: "The Shawshank Redemption", year: 1994 },
-    { label: "The Godfather", year: 1972 },
-    { label: "The Godfather: Part II", year: 1974 },
-    { label: "The Dark Knight", year: 2008 },
-    { label: "12 Angry Men", year: 1957 },
-    { label: "Schindler's List", year: 1993 },
-    { label: "Pulp Fiction", year: 1994 },
-    {
-      label: "The Lord of the Rings: The Return of the King",
-      year: 2003,
-    },
-    { label: "The Good, the Bad and the Ugly", year: 1966 },
-    { label: "Fight Club", year: 1999 },
-    {
-      label: "The Lord of the Rings: The Fellowship of the Ring",
-      year: 2001,
-    },
-    {
-      label: "Star Wars: Episode V - The Empire Strikes Back",
-      year: 1980,
-    },
-    { label: "Forrest Gump", year: 1994 },
-    { label: "Inception", year: 2010 },
-    {
-      label: "The Lord of the Rings: The Two Towers",
-      year: 2002,
-    },
-    { label: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { label: "Goodfellas", year: 1990 },
-    { label: "The Matrix", year: 1999 },
-    { label: "Seven Samurai", year: 1954 },
-    {
-      label: "Star Wars: Episode IV - A New Hope",
-      year: 1977,
-    },
-    { label: "City of God", year: 2002 },
-    { label: "Se7en", year: 1995 },
-    { label: "The Silence of the Lambs", year: 1991 },
-    { label: "It's a Wonderful Life", year: 1946 },
-    { label: "Life Is Beautiful", year: 1997 },
-    { label: "The Usual Suspects", year: 1995 },
-    { label: "Léon: The Professional", year: 1994 },
-    { label: "Spirited Away", year: 2001 },
-    { label: "Saving Private Ryan", year: 1998 },
-    { label: "Once Upon a Time in the West", year: 1968 },
-    { label: "American History X", year: 1998 },
-    { label: "Interstellar", year: 2014 },
-    { label: "Casablanca", year: 1942 },
-    { label: "City Lights", year: 1931 },
-    { label: "Psycho", year: 1960 },
-    { label: "The Green Mile", year: 1999 },
-    { label: "The Intouchables", year: 2011 },
-    { label: "Modern Times", year: 1936 },
-    { label: "Raiders of the Lost Ark", year: 1981 },
-    { label: "Rear Window", year: 1954 },
-    { label: "The Pianist", year: 2002 },
-    { label: "The Departed", year: 2006 },
-    { label: "Terminator 2: Judgment Day", year: 1991 },
-    { label: "Back to the Future", year: 1985 },
-    { label: "Whiplash", year: 2014 },
-    { label: "Gladiator", year: 2000 },
-    { label: "Memento", year: 2000 },
-    { label: "The Prestige", year: 2006 },
-    { label: "The Lion King", year: 1994 },
-    { label: "Apocalypse Now", year: 1979 },
-    { label: "Alien", year: 1979 },
-    { label: "Sunset Boulevard", year: 1950 },
-    {
-      label:
-        "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
-      year: 1964,
-    },
-    { label: "The Great Dictator", year: 1940 },
-    { label: "Cinema Paradiso", year: 1988 },
-    { label: "The Lives of Others", year: 2006 },
-    { label: "Grave of the Fireflies", year: 1988 },
-    { label: "Paths of Glory", year: 1957 },
-    { label: "Django Unchained", year: 2012 },
-    { label: "The Shining", year: 1980 },
-    { label: "WALL·E", year: 2008 },
-    { label: "American Beauty", year: 1999 },
-    { label: "The Dark Knight Rises", year: 2012 },
-    { label: "Princess Mononoke", year: 1997 },
-    { label: "Aliens", year: 1986 },
-    { label: "Oldboy", year: 2003 },
-    { label: "Once Upon a Time in America", year: 1984 },
-    { label: "Witness for the Prosecution", year: 1957 },
-    { label: "Das Boot", year: 1981 },
-    { label: "Citizen Kane", year: 1941 },
-    { label: "North by Northwest", year: 1959 },
-    { label: "Vertigo", year: 1958 },
-    {
-      label: "Star Wars: Episode VI - Return of the Jedi",
-      year: 1983,
-    },
-    { label: "Reservoir Dogs", year: 1992 },
-    { label: "Braveheart", year: 1995 },
-    { label: "M", year: 1931 },
-    { label: "Requiem for a Dream", year: 2000 },
-    { label: "Amélie", year: 2001 },
-    { label: "A Clockwork Orange", year: 1971 },
-    { label: "Like Stars on Earth", year: 2007 },
-    { label: "Taxi Driver", year: 1976 },
-    { label: "Lawrence of Arabia", year: 1962 },
-    { label: "Double Indemnity", year: 1944 },
-    {
-      label: "Eternal Sunshine of the Spotless Mind",
-      year: 2004,
-    },
-    { label: "Amadeus", year: 1984 },
-    { label: "To Kill a Mockingbird", year: 1962 },
-    { label: "Toy Story 3", year: 2010 },
-    { label: "Logan", year: 2017 },
-    { label: "Full Metal Jacket", year: 1987 },
-    { label: "Dangal", year: 2016 },
-    { label: "The Sting", year: 1973 },
-    { label: "2001: A Space Odyssey", year: 1968 },
-    { label: "Singin' in the Rain", year: 1952 },
-    { label: "Toy Story", year: 1995 },
-    { label: "Bicycle Thieves", year: 1948 },
-    { label: "The Kid", year: 1921 },
-    { label: "Inglourious Basterds", year: 2009 },
-    { label: "Snatch", year: 2000 },
-    { label: "3 Idiots", year: 2009 },
-    { label: "Monty Python and the Holy Grail", year: 1975 },
-  ];
+
+  const [profilepic, setProfilepic] = useState("");
+  const [UserName, setUserName] = useState("");
+  const [Email, setEmail] = useState("");
+  const [MobileNumber, setMobileNumber] = useState("");
+  const [TeamList, setTeamList] = useState([]);
+  const [Team, setTeam] = useState(null);
+  const [RoleList, setRoleList] = useState([]);
+  const [Role, setRole] = useState(null);
+  const [UserGroupList, setUserGroupList] = useState([]);
+  const [UserGroup, setUserGroup] = useState([]);
+
+  //closefun
+
+  const closefun = () => {
+    setUserName("");
+    setEmail("");
+    setMobileNumber("");
+    setTeam(null);
+    setRole(null);
+    setUserGroup([]);
+    setEditData("");
+  };
+  //apiss
+  const UserGrouplistapi = async () => {
+    const { data } = await UsergrouplistAPI();
+    if (data.status == "success") {
+      setUserGroupList(
+        data.message.length ? dynamicSort("groupName", data.message) : []
+      );
+      if (EditData) {
+        setUserGroup(EditData.userGroup ?? []);
+      }
+    } else {
+      setUserGroupList([]);
+    }
+  };
+  const Roleget = async () => {
+    try {
+      const { data } = await RolelistAPI();
+      if (data.status == "success") {
+        setRoleList(
+          data.message.length ? dynamicSort("name", data.message) : []
+        );
+        if (EditData) {
+          setRole(EditData.role);
+        }
+      } else {
+        setRoleList([]);
+      }
+    } catch (error) {
+      console.error("Roleget", error);
+    }
+  };
+  const Teamget = async () => {
+    try {
+      const { data } = await TeamlistAPI();
+      if (data.status == "success") {
+        setTeamList(
+          data.message.length ? dynamicSort("name", data.message) : []
+        );
+        if (EditData) {
+          setTeam(EditData.team);
+        }
+      } else {
+        setTeamList([]);
+      }
+    } catch (error) {
+      console.error("teamget", error);
+    }
+  };
+  const Useraddapi = async () => {
+    const validations = [
+      { condition: !UserName.trim(), message: "Please fill the user name" },
+      {
+        condition: !Email.trim() || !validateEmail(Email.trim()),
+        message: "Please check the Email ID",
+      },
+      {
+        condition: MobileNumber.trim().length !== 10,
+        message: "Please check the mobile number",
+      },
+      {
+        condition: Team == null,
+        message: "Please select a team",
+      },
+      {
+        condition: Role == null,
+        message: "Please select a role",
+      },
+    ];
+    const invalid = validations.find(({ condition }) => condition);
+    if (invalid) {
+      toast.error(invalid.message);
+      return;
+    }
+
+    const { data } = await AddUser({
+      username: UserName,
+      email: Email,
+      mobile: MobileNumber,
+      role: Role._id,
+      team: Team._id,
+      userGroup: UserGroup.map((_id) => _id),
+    });
+    if (data.status === "success") {
+      toast.success(data.message);
+      setAddopen(false);
+      setEditData("");
+      closefun();
+    } else {
+      toast.error(data.message);
+    }
+  };
+  const Usereditapi = async () => {
+    const validations = [
+      { condition: !UserName.trim(), message: "Please fill the user name" },
+      {
+        condition: !Email.trim() || !validateEmail(Email.trim()),
+        message: "Please check the Email ID",
+      },
+      {
+        condition: MobileNumber.trim().length !== 10,
+        message: "Please check the mobile number",
+      },
+      {
+        condition: Team == null,
+        message: "Please select a team",
+      },
+      {
+        condition: Role == null,
+        message: "Please select a role",
+      },
+    ];
+    const invalid = validations.find(({ condition }) => condition);
+    if (invalid) {
+      toast.error(invalid.message);
+      return;
+    }
+    const { data } = await UserEdit({
+      id: EditData._id,
+      username: UserName,
+      email: Email,
+      mobile: MobileNumber,
+      role: Role._id,
+      team: Team._id,
+      userGroup: UserGroup.map((_id) => _id),
+    });
+    if (data.status == "success") {
+      toast.success(data.message);
+      setAddopen(false);
+      setEditData("");
+      closefun();
+    } else {
+      toast.error(data.message);
+    }
+  };
+  console.log("mobilenumber", typeof MobileNumber);
+  useEffect(() => {
+    UserGrouplistapi();
+    Roleget();
+    Teamget();
+    if (EditData) {
+      setUserName(EditData.name);
+      setEmail(EditData.email);
+      setMobileNumber(EditData.mobile.toString());
+    }
+  }, []);
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -186,7 +242,7 @@ export default function UserAdd({ Addopen, setAddopen }) {
         >
           <Typography color={primary} sx={{ fontSize: 16, fontWeight: 600 }}>
             {" "}
-            Add User
+            {EditData ? "Edit" : "Add"} User
           </Typography>
           <IconButton onClick={handleClose}>
             <CancelRoundedIcon sx={{ color: primary }} />
@@ -239,6 +295,8 @@ export default function UserAdd({ Addopen, setAddopen }) {
                   variant="outlined"
                   size="small"
                   fullWidth
+                  value={UserName}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
               </Grid2>
               <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ mx: 1, mt: 2 }}>
@@ -247,41 +305,72 @@ export default function UserAdd({ Addopen, setAddopen }) {
                   variant="outlined"
                   size="small"
                   fullWidth
+                  type="email"
+                  value={Email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid2>
-              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ m: 1, mt: 2 }}>
+              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ mx: 1, mt: 2 }}>
                 <TextField
                   label="Mobile no"
                   variant="outlined"
                   size="small"
                   fullWidth
+                  slotProps={{
+                    input: {
+                      inputProps: {
+                        maxLength: 10,
+                      },
+                    },
+                  }}
+                  value={MobileNumber}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    setMobileNumber(value);
+                  }}
                 />
               </Grid2>
-              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ m: 1, mt: 2 }}>
+              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ mx: 1, mt: 2 }}>
                 <Autocomplete
                   disablePortal
                   fullWidth
-                  options={top100Films}
+                  disableClearable
+                  options={TeamList}
+                  getOptionLabel={(x) => x.name}
+                  getOptionKey={(x) => x._id}
+                  value={Team}
+                  onChange={(event, newvalue) => setTeam(newvalue)}
                   renderInput={(params) => (
                     <TextField {...params} label="Select Team" size="small" />
                   )}
                 />
               </Grid2>
-              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ m: 1, mt: 2 }}>
+              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ mx: 1, mt: 2 }}>
                 <Autocomplete
                   disablePortal
                   fullWidth
-                  options={top100Films}
+                  options={RoleList}
+                  disableClearable
+                  getOptionLabel={(options) => options.name}
+                  getOptionKey={(options) => options._id}
+                  value={Role}
+                  onChange={(event, newValue) => setRole(newValue)}
                   renderInput={(params) => (
                     <TextField {...params} label="Select Role" size="small" />
                   )}
                 />
               </Grid2>
-              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ m: 1, mt: 2 }}>
+              <Grid2 size={{ md: 5.5, xs: 12 }} sx={{ mx: 1, mt: 2 }}>
                 <Autocomplete
                   disablePortal
                   fullWidth
-                  options={top100Films}
+                  multiple
+                  disableCloseOnSelect
+                  options={UserGroupList}
+                  getOptionLabel={(options) => options.groupName}
+                  getOptionKey={(options) => options._id}
+                  value={UserGroup}
+                  onChange={(event, newValue) => setUserGroup(newValue)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -305,8 +394,12 @@ export default function UserAdd({ Addopen, setAddopen }) {
         }}
       >
         <Grid2 container spacing={1}>
-          <Button size="small" sx={{ px: 2, py: 1 }}>
-            Add User
+          <Button
+            size="small"
+            sx={{ px: 2, py: 1 }}
+            onClick={() => (EditData ? Usereditapi() : Useraddapi())}
+          >
+            {EditData ? "Edit" : "Add"} User
           </Button>
         </Grid2>
       </DialogActions>

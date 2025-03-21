@@ -1,6 +1,8 @@
 import useThemeColor from "@/hooks/useThemeColor";
 import {
+  Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,11 +11,16 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import uploadimage from "../../public/assets/Common/Fileuploadclick.svg";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { FileUploadAPI, PreSignedUrlAPI } from "@/Services/Commonapi";
 
 export default function Fileupload({ UploadOpen, setUploadOpen }) {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const handleClose = (event, reason) => {
@@ -22,6 +29,66 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
     }
     setUploadOpen(false);
   };
+
+  const [DocumentTitle, setDocumentTitle] = useState("");
+  const [DocumentExpiresAt, setDocumentExpiresAt] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [chips, setChips] = useState([]);
+  const [Filechoosen, setFilechoosen] = useState(null);
+
+  const handleFileChange = (e) => {
+    console.log("value", e.target.files);
+
+    if (e.target.files) {
+      const chosenFiles = Array.prototype.slice.call(e.target.files);
+      let input = chosenFiles[0].name;
+      setDocumentTitle(chosenFiles[0].name);
+      setFilechoosen(chosenFiles[0]);
+    }
+
+    // handleUploadClick(chosenFiles);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && inputValue.trim() !== "") {
+      setChips([...chips, inputValue.trim()]);
+      setInputValue("");
+    }
+  };
+  const handleDelete = (chipToDelete) => {
+    setChips(chips.filter((chip) => chip !== chipToDelete));
+  };
+
+  const fileuploadApi = async () => {
+    const payload = {
+      parent_file_id: "",
+      is_version: "true",
+      is_download: "true",
+      expire_at: "24-03-2025",
+      file_tag: chips,
+      file_title: DocumentTitle,
+      size: Filechoosen.size,
+      file_type: Filechoosen.type,
+      file_name: Filechoosen.name,
+      file_folder_path: "",
+    };
+    const { data } = await FileUploadAPI(payload);
+    console.log("data", data);
+    if (data.status == "success") {
+      console.log("Filechoosen", Filechoosen, data.preSignedUrl);
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(Filechoosen);
+      reader.onload = async () => {
+        const binary = reader.result;
+        const response2 = await PreSignedUrlAPI(data.preSignedUrl, binary);
+        console.log("response", response2);
+        if (response2.status == 200) {
+          setUploadOpen(false);
+        }
+      };
+    }
+  };
+
   return (
     <>
       <Dialog
@@ -40,33 +107,46 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
         }}
       >
         <DialogContent>
-          <Grid2
-            container
-            sx={{
-              border: `1px dashed ${primary} `,
-              borderColor: primary,
-              borderRadius: 2,
-              justifyContent: "center",
-              p: 1,
-              height: "40Vh",
-            }}
-          >
+          <label htmlFor="actual-btn">
             <Grid2
               container
-              size={12}
               sx={{
+                border: `1px dashed ${primary} `,
+                borderColor: primary,
+                borderRadius: 2,
                 justifyContent: "center",
-                cursor: "pointer",
+                p: 1,
+                height: "40Vh",
               }}
             >
-              <img
-                src="/assets/Common/Fileuploadclick.svg"
-                alt="Upload"
-                loading="lazy"
-              />
+              <div style={{ display: "none" }}>
+                <input
+                  type="file"
+                  accept="text"
+                  id="actual-btn"
+                  onChange={(e) => {
+                    handleFileChange(e);
+                  }}
+                />
+              </div>
+              <Grid2
+                htmlFor="actual-btn"
+                container
+                size={12}
+                sx={{
+                  justifyContent: "center",
+                  cursor: "pointer",
+                }}
+              >
+                <img
+                  src="/assets/Common/Fileuploadclick.svg"
+                  alt="Upload"
+                  loading="lazy"
+                />
+              </Grid2>
+              Drag files here or click to upload your assets, your way
             </Grid2>
-            Drag files here or click to upload your assets, your way
-          </Grid2>
+          </label>
           <Grid2 container sx={{ mt: 2 }} spacing={1}>
             <Grid2 size={4}>
               <TextField
@@ -74,6 +154,8 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
                 variant="outlined"
                 label="Document Title"
                 size="small"
+                value={DocumentTitle}
+                onChange={(e) => setDocumentTitle(e.target.value)}
               />
             </Grid2>
             <Grid2 size={4}>
@@ -82,15 +164,45 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
                 variant="outlined"
                 label="Document Tags"
                 size="small"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                slotProps={{
+                  input: {
+                    startAdornment:
+                      chips.length != 0 ? (
+                        <Box
+                          sx={{ display: "flex", gap: 0.5, overflow: "scroll" }}
+                        >
+                          {chips.map((item, index) => (
+                            <Chip
+                              key={index}
+                              label={item}
+                              onDelete={() => handleDelete(item)}
+                              size="small"
+                            />
+                          ))}
+                        </Box>
+                      ) : (
+                        ""
+                      ),
+                  },
+                }}
               />
             </Grid2>
             <Grid2 size={4}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Expires At"
-                size="small"
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Expires At"
+                  slotProps={{
+                    textField: { size: "small", fullWidth: true },
+                  }}
+                  views={["year", "month", "day"]}
+                  minDate={dayjs()}
+                  value={DocumentExpiresAt}
+                  onChange={(newValue) => setDocumentExpiresAt(newValue)}
+                />
+              </LocalizationProvider>
             </Grid2>
           </Grid2>
         </DialogContent>
@@ -109,7 +221,11 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
               {" "}
               Cancel
             </Button>
-            <Button variant="outlined" size="small">
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => fileuploadApi()}
+            >
               {" "}
               Upload
             </Button>

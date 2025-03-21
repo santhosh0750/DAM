@@ -105,7 +105,7 @@ export default function Team() {
                       sx={{ py: 0 }}
                       key={x.name}
                       secondaryAction={
-                        <div style={{ display: "flex" }}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <Tooltip title={"Edit"}>
                             <IconButton
                               edge="end"

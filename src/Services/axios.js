@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  // baseURL: "http://172.16.5.213:3000/",
-  baseURL: "http://172.16.5.22:4400/", // Replace with your API base URL
+  baseURL: "http://172.16.5.213:3000/",
+  // baseURL: "http://172.16.5.22:4400/", // Replace with your API base URL
   // NEXT_PUBLIC_Backend_URL: "http://172.16.5.22:4400/",
   // baseURL: "https://numedlabapi.treeone.one/", // Replace with your API base URL
 });

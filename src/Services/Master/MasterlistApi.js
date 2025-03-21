@@ -10,3 +10,11 @@ export const RolelistAPI = () => {
 export const UsergrouplistAPI = () => {
   return axiosInstance.get("/userGroup");
 };
+
+export const ProjectlistAPI = () => {
+  return axiosInstance.get("/project/getProjects");
+};
+
+export const CustomerlistAPI = () => {
+  return axiosInstance.get("/customer");
+};

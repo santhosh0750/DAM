@@ -23,6 +23,7 @@ import { UserlistAPI } from "@/Services/Commonapi";
 import { toast } from "react-toastify";
 import { UsergroupEdit } from "@/Services/Master/MasterEditApi";
 import { AddUserGroup } from "@/Services/Master/MasterAddApi";
+import { dynamicSort } from "@/utlis/CommonFunctions";
 
 export default function Usergroupdialog({
   Addopen,
@@ -38,6 +39,7 @@ export default function Usergroupdialog({
       return;
     }
     setAddopen(false);
+    closefun();
   };
 
   const CustomPopper = (props) => <Popper {...props} placement="top-start" />;
@@ -49,12 +51,13 @@ export default function Usergroupdialog({
     setUsers([]);
     setUserList([]);
     setUserGroupName("");
+    setEditData("");
   };
   //API
   const Userlistgetapi = async () => {
     const { data } = await UserlistAPI();
     if (data.status == "success") {
-      setUserList(data.message);
+      setUserList(data.message.length ? dynamicSort("name", data.message) : []);
     } else {
       setUserList([]);
     }

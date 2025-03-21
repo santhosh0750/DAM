@@ -19,6 +19,7 @@ import { RolelistAPI } from "@/Services/Master/MasterlistApi";
 import { RoleDeleteAPI } from "@/Services/Master/MasterDeleteApi";
 import DeleteDialog from "@/Uicomponents/DeleteDialog";
 import { toast } from "react-toastify";
+import { dynamicSort } from "@/utlis/CommonFunctions";
 
 export default function Role() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
@@ -31,7 +32,9 @@ export default function Role() {
     try {
       const { data } = await RolelistAPI();
       if (data.status == "success") {
-        setRoleList(data.message);
+        setRoleList(
+          data.message.length ? dynamicSort("name", data.message) : []
+        );
       } else {
         setRoleList([]);
       }

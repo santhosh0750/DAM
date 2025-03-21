@@ -1,25 +1,45 @@
 import {
   Box,
   Button,
+  FormControlLabel,
   Grid2,
   IconButton,
   List,
   ListItem,
   ListItemText,
+  Switch,
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React, { useEffect, useState } from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import useThemeColor from "@/hooks/useThemeColor";
 import UserAdd from "../masterDailogs/UserAdd";
 import AddIcon from "@mui/icons-material/Add";
+import { UserlistAPI } from "@/Services/Commonapi";
+import { dynamicSort } from "@/utlis/CommonFunctions";
 
 export default function UserMaster() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
   const [Addopen, setAddopen] = useState(false);
-
+  const [UserList, setUserList] = useState([]);
+  const [EditData, setEditData] = useState("");
+  //api
+  const Userlistgetapi = async () => {
+    const { data } = await UserlistAPI();
+    if (data.status == "success") {
+      setUserList(data.message.length ? dynamicSort("name", data.message) : []);
+    } else {
+      setUserList([]);
+    }
+  };
+  const editfun = (value) => {
+    setAddopen(true);
+    setEditData(value);
+  };
+  useEffect(() => {
+    Userlistgetapi();
+  }, [Addopen]);
   return (
     <>
       <Grid2 size={{ md: 3, xs: 12 }}>
@@ -58,41 +78,62 @@ export default function UserMaster() {
             </Grid2>
             <Grid2 container sx={{ height: "33vh", overflowY: "auto" }}>
               <List dense sx={{ width: "100%" }}>
-                <ListItem
-                  secondaryAction={
-                    <div style={{ display: "flex" }}>
-                      <Tooltip title={"Edit"}>
-                        <IconButton edge="end" size="small">
-                          <ModeEditIcon sx={{ color: primary }} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={"Delete"}>
-                        <IconButton edge="end" size="small">
-                          <DeleteIcon sx={{ color: primary }} />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  }
-                >
-                  <ListItemText
-                    primary={"Santhosh"}
-                    slotProps={{
-                      primary: {
-                        sx: {
-                          color: text,
-                          fontWeight: "medium",
-                          variant: "body2",
-                        },
-                      },
-                    }}
-                  />
-                </ListItem>
+                {UserList.map((x) => {
+                  return (
+                    <ListItem
+                      sx={{ py: 0 }}
+                      key={x._id}
+                      secondaryAction={
+                        <div style={{ display: "flex" }}>
+                          <Tooltip title={"Active"}>
+                            <Switch
+                              checked={x.is_active}
+                              size="small"
+                              sx={{ fontSize: 18 }}
+                            />
+                          </Tooltip>
+                          <Tooltip title={"Edit"}>
+                            <IconButton
+                              edge="end"
+                              size="small"
+                              onClick={() => editfun(x)}
+                            >
+                              <ModeEditIcon
+                                sx={{ color: primary, fontSize: 18 }}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      }
+                    >
+                      <ListItemText
+                        primary={x.name}
+                        slotProps={{
+                          primary: {
+                            sx: {
+                              color: text,
+                              fontWeight: "medium",
+                              variant: "body2",
+                            },
+                          },
+                        }}
+                      />
+                    </ListItem>
+                  );
+                })}
               </List>
             </Grid2>
           </Box>
         </Grid2>
       </Grid2>
-      {Addopen && <UserAdd Addopen={Addopen} setAddopen={setAddopen} />}
+      {Addopen && (
+        <UserAdd
+          Addopen={Addopen}
+          setAddopen={setAddopen}
+          EditData={EditData}
+          setEditData={setEditData}
+        />
+      )}
     </>
   );
 }

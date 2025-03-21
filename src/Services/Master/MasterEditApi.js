@@ -11,3 +11,11 @@ export const RoleEdit = (payload) => {
 export const UsergroupEdit = (payload) => {
   return axiosInstance.post("/userGroup/update", payload);
 };
+
+export const UserEdit = (payload) => {
+  return axiosInstance.post("/user/updateUser", payload);
+};
+
+export const ProjectEdit = (payload) => {
+  return axiosInstance.post("/project/updateProject", payload);
+};

@@ -12,10 +12,18 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import { AddProject } from "@/Services/Master/MasterAddApi";
+import { ProjectEdit } from "@/Services/Master/MasterEditApi";
+import { toast } from "react-toastify";
 
-export default function Collectiondailog({ Addopen, setAddopen }) {
+export default function Collectiondailog({
+  Addopen,
+  setAddopen,
+  EditData,
+  setEditData,
+}) {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -24,7 +32,54 @@ export default function Collectiondailog({ Addopen, setAddopen }) {
       return;
     }
     setAddopen(false);
+    setEditData("");
   };
+
+  const [ProjectName, setProjectName] = useState("");
+
+  //api
+  const AddProjectApi = async () => {
+    if (ProjectName == "") {
+      toast.error("Please Fill The Project Name");
+      return;
+    }
+    const { data } = await AddProject({
+      projectName: ProjectName,
+    });
+    console.log("data");
+    if (data.status == "success") {
+      toast.success("Project Added Sucessfully");
+      setAddopen(false);
+      setProjectName("");
+      setEditData("");
+    } else {
+      toast.error(data.message);
+    }
+  };
+  const EditProjectApi = async () => {
+    if (ProjectName == "") {
+      toast.error("Please Fill The Project Name");
+      return;
+    }
+    const { data } = await ProjectEdit({
+      projectName: ProjectName,
+      id: EditData._id,
+    });
+    console.log("data");
+    if (data.status == "success") {
+      toast.success("Project Updated Sucessfully");
+      setAddopen(false);
+      setProjectName("");
+      setEditData("");
+    } else {
+      toast.error(data.message);
+    }
+  };
+  useEffect(() => {
+    if (EditData) {
+      setProjectName(EditData.projectName);
+    }
+  }, []);
 
   return (
     <Dialog
@@ -54,13 +109,9 @@ export default function Collectiondailog({ Addopen, setAddopen }) {
             borderBottomColor: primary,
           }}
         >
-          <Typography
-            variant="h6"
-            color={primary}
-            sx={{ fontSmooth: 1, fontWeight: 700 }}
-          >
+          <Typography color={primary} sx={{ fontSize: 16, fontWeight: 600 }}>
             {" "}
-            Add Project
+            {EditData == "" ? "Add" : "Edit"} Project
           </Typography>
           <IconButton onClick={handleClose}>
             <CancelRoundedIcon sx={{ color: primary }} />
@@ -74,6 +125,13 @@ export default function Collectiondailog({ Addopen, setAddopen }) {
           fullWidth
           sx={{ mt: 1 }}
           size="small"
+          value={ProjectName}
+          onChange={(e) => setProjectName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              EditData == "" ? AddProjectApi() : EditProjectApi();
+            }
+          }}
         />
       </DialogContent>
       <DialogActions
@@ -86,8 +144,14 @@ export default function Collectiondailog({ Addopen, setAddopen }) {
         }}
       >
         <Grid2 container spacing={1}>
-          <Button size="small" sx={{ px: 2, py: 1 }}>
-            Add Project
+          <Button
+            size="small"
+            sx={{ px: 2, py: 1 }}
+            onClick={() =>
+              EditData == "" ? AddProjectApi() : EditProjectApi()
+            }
+          >
+            {EditData == "" ? "Add" : "Edit"} Project
           </Button>
         </Grid2>
       </DialogActions>

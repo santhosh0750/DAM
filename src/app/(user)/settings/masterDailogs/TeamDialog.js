@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-import { TeamAdd } from "@/Services/Master/MasterAddApi";
+import { AddTeam } from "@/Services/Master/MasterAddApi";
 import { TeamEdit } from "@/Services/Master/MasterEditApi";
 import { toast } from "react-toastify";
 
@@ -44,7 +44,7 @@ export default function Teamdailog({
       toast.error("Please Fill The Team Name");
       return;
     }
-    const { data } = await TeamAdd({
+    const { data } = await AddTeam({
       team: TeamName,
     });
     console.log("data");
@@ -130,7 +130,7 @@ export default function Teamdailog({
           onChange={(e) => setTeamName(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              AddTeamApi();
+              EditData == "" ? AddTeamApi() : EditTeamApi();
             }
           }}
         />
