@@ -18,3 +18,11 @@ export const ProjectlistAPI = () => {
 export const CustomerlistAPI = () => {
   return axiosInstance.get("/customer");
 };
+
+export const CollectionlistAPI = () => {
+  return axiosInstance.get("/customer");
+};
+
+export const DoctypelistAPI = () => {
+  return axiosInstance.get("/customer");
+};

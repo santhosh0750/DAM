@@ -13,6 +13,8 @@ import {
 import { useMediaQuery } from "@mui/system";
 import React from "react";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import Image from "next/image";
+import DeleteGif from "../../public/assets/Common/Deletegif.gif";
 
 export default function DeleteDialog({ DeleteOpen, setDeleteOpen, detail }) {
   //   console.log("detail", detail.function);
@@ -66,11 +68,22 @@ export default function DeleteDialog({ DeleteOpen, setDeleteOpen, detail }) {
         </Grid2>
       </DialogTitle>
       <DialogContent sx={{ py: 2, px: 2 }}>
+        <Grid2 container sx={{justifyContent:"center"}}>
+          <Grid2 size={12} sx={{justifyContent:"center",display:'flex'}} >
+        <Image
+                        src={DeleteGif}
+                        width={150}
+                        height={150}
+                        alt="Main Image"
+                        priority
+                      />
+                      </Grid2>
         <Typography component="div">
           Do You want To Delete{" "}
-          <span style={{ color: primary, fontWeight: 500 }}>{detail.key} </span>{" "}
+          <span style={{ color: primary, fontWeight: 500 }}>{detail?.key ?? '-'} </span>{" "}
           ?
         </Typography>
+        </Grid2>
       </DialogContent>
       <DialogActions
         sx={{

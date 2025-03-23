@@ -5,8 +5,10 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import useThemeColor from "@/hooks/useThemeColor";
+import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 
-export default function Tabbutton() {
+export default function Tabbutton({FFView,setFFView}) {
+  console.log("FFview",FFView)
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
 
   return (
@@ -21,8 +23,9 @@ export default function Tabbutton() {
           my: 1,
         }}
       >
-        <IconButton>
-          <ListAltIcon />
+        {FFView}
+        <IconButton onClick={()=> setFFView(!FFView)}>
+          {FFView ? <ListAltIcon /> : <PhotoSizeSelectActualIcon/>}
         </IconButton>
       </Grid2>
       <Grid2

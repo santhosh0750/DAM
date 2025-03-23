@@ -16,10 +16,14 @@ import Searchaandfilecount from "@/Uicomponents/Searchaandfilecount";
 import Uploadbutton from "@/Uicomponents/Uploadbutton";
 import Tabbutton from "@/Uicomponents/Tabbutton";
 import Filesmallcard from "@/Uicomponents/Filesmallcard";
+import RenameDailog from "@/Uicomponents/RenameDailog";
+import Maincard from "@/Uicomponents/Maincard";
 
 export default function page() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
   const [Search, setSearch] = useState("");
+  const [RenameOpen,setRenameOpen]=useState(false)
+  const [FFView,setFFView] = useState(false)
   const top100Films = [
     { label: "The Shawshank Redemption", year: 1994 },
     { label: "The Godfather", year: 1972 },
@@ -217,15 +221,16 @@ export default function page() {
                 justifyContent: { md: "end", xs: "center" },
               }}
             >
-              <Tabbutton />
+              <Tabbutton FFView={FFView} setFFView={setFFView} />
             </Grid2>
           </Grid2>
           <Grid2 container size={12} spacing={1}>
             {/* <Maincard /> */}
-            <Filesmallcard />
+            {!FFView ?  <Filesmallcard /> :<Maincard/>}
           </Grid2>
         </Grid2>
       </Grid2>
+     { RenameOpen&&<RenameDailog RenameOpen={RenameOpen} setRenameOpen={setRenameOpen}/>}
     </Grid2>
   );
 }

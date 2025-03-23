@@ -1,11 +1,21 @@
-import { Avatar, Box, Grid2, IconButton } from "@mui/material";
+import { Avatar, Box, Button, Grid2, IconButton, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
-import React from "react";
+import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import useThemeColor from "@/hooks/useThemeColor";
-
+import Menucomponents from "./Menucomponents";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 export default function Filesmallcard() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
+  const[OpenMenu,setOpenMenu]=useState(false)
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Grid2 container size={{ md: 3, xs: 12 }}>
@@ -28,7 +38,7 @@ export default function Filesmallcard() {
               px: 1,
             }}
           >
-            <Grid2 container size={10}>
+            <Grid2 container size={9}>
               <Grid2
                 size={12}
                 sx={{
@@ -45,10 +55,34 @@ export default function Filesmallcard() {
                 Pura Creative PNG
               </Grid2>
             </Grid2>
-            <Grid2 size={2}>
-              <IconButton size="medium">
-                <MoreVertIcon />
-              </IconButton>
+            <Grid2 size={3} sx={{display:"flex",alignItems:"center"}}>
+              <BookmarkBorderIcon/>
+            <IconButton
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+      <MoreVertIcon />
+      </IconButton>
+      {open&& <Menucomponents open={open} anchorEl={anchorEl} setAnchorEl={setAnchorEl} />}
+      {/* <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleClose}>Logout</MenuItem>
+      </Menu> */}
+
+              {/* <IconButton size="medium" onClick={()=> setOpenMenu(!OpenMenu)} >
+              </IconButton> */}
             </Grid2>
           </Grid2>
         </Grid2>

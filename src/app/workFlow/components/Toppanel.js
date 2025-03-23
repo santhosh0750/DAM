@@ -5,15 +5,18 @@ export default function Toppanel() {
   const [Flowname, setFlowname] = useState("");
 
   return (
-    <div className="min-h-4 bg-[#D9E1F7] w-[85%] px-2">
-      <div className="flex flex-row justify-between items-center ">
+    <div className="min-h-4 bg-transparent w-[85%] px-2 justify-end items-center m-1 ">
+      <div className="flex flex-row items-center ">
+        <div className=" flex  w-[60%] justify-end" >
         <TextField
-          variant="standard"
+          variant="outlined"
+          size="small"
           label={"Flow Name"}
           value={Flowname}
           onChange={(e) => setFlowname(e.target.value)}
         />
-        <div className="gap-1">
+        </div>
+        <div className="gap-1 w-[40%] flex justify-end ">
           <Button
             size="small"
             sx={{

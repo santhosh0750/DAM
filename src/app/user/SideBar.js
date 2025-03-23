@@ -86,7 +86,7 @@ export default function SideBar({ children }) {
               sx={{ display: "flex", alignItems: "center", px: 1 }}
             >
               <Image
-                src={"./assets/Sidebar/mainicondashboard.svg"}
+                src={DeleteGif}
                 width={30}
                 height={30}
                 alt="Main Image"

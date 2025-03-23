@@ -35,20 +35,36 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
   const [inputValue, setInputValue] = useState("");
   const [chips, setChips] = useState([]);
   const [Filechoosen, setFilechoosen] = useState(null);
-
-  const handleFileChange = (e) => {
-    console.log("value", e.target.files);
-
-    if (e.target.files) {
-      const chosenFiles = Array.prototype.slice.call(e.target.files);
-      let input = chosenFiles[0].name;
-      setDocumentTitle(chosenFiles[0].name);
-      setFilechoosen(chosenFiles[0]);
-    }
-
-    // handleUploadClick(chosenFiles);
-  };
-
+ const [FileContent,setFileContent] = useState(null)
+      
+        const handleFileChange = (e) => {
+          if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            setDocumentTitle(file.name);
+            setFilechoosen(file);
+        
+            const reader = new FileReader();
+        
+            if (file.type.includes("text")) {
+              // Read text file
+              reader.onload = (event) => {
+                setFileContent(event.target.result);
+              };
+              reader.readAsText(file);
+            } else if (file.type.includes("image")) {
+              // Read image file
+              reader.onload = (event) => {
+                setFileContent(event.target.result); // Base64 image
+              };
+              reader.readAsDataURL(file);
+            } else if (file.type.includes("pdf")) {
+              // Show PDF
+              const pdfURL = URL.createObjectURL(file);
+              setFileContent(pdfURL);
+            }
+          }
+        };
+  
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && inputValue.trim() !== "") {
       setChips([...chips, inputValue.trim()]);
@@ -129,23 +145,23 @@ export default function Fileupload({ UploadOpen, setUploadOpen }) {
                   }}
                 />
               </div>
-              <Grid2
-                htmlFor="actual-btn"
-                container
-                size={12}
-                sx={{
-                  justifyContent: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <img
-                  src="/assets/Common/Fileuploadclick.svg"
-                  alt="Upload"
-                  loading="lazy"
-                />
-              </Grid2>
-              Drag files here or click to upload your assets, your way
-            </Grid2>
+              {FileContent ? (
+    Filechoosen.type.includes("image") ? (
+      <img src={FileContent} alt="Preview" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+    ) : Filechoosen.type.includes("pdf") ? (
+      <iframe src={FileContent} width="100%" height="100%" title="PDF Preview"></iframe>
+    ) : (
+      <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+        {FileContent}
+      </Typography>
+    )
+  ) : (
+    <Grid2 container sx={{ justifyContent: "center", textAlign: "center",flexDirection:"column" }}>
+      <img src="/assets/Common/Fileuploadclick.svg" alt="Upload" loading="lazy" />
+      <Typography variant="body2">Drag files here or click to upload</Typography>
+    </Grid2>
+  )}
+  </Grid2>
           </label>
           <Grid2 container sx={{ mt: 2 }} spacing={1}>
             <Grid2 size={4}>

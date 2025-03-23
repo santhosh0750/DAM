@@ -19,14 +19,14 @@ export default function Sidepanel() {
       <div className="flex flex-row justify-center p-1 ">
         <div className="flex flex-row w-[100%] ">
           {" "}
-          <div className=" flex text-xl bg-red-500 font-bold subpixel-antialiased text-[#1E3A8A]">
+          <div className=" flex flex-row text-xl font-bold subpixel-antialiased text-[#1E3A8A] w-full">
             {" "}
             Flow Studio{" "}
           </div>
         </div>
-        <span className="text-xs text-[#54575B]">
+        <div className="text-xs text-[#54575B]">
           Streamline and automate workflows
-        </span>
+        </div>
       </div>
       <div className="flex flex-col p-1 mt-2 gap-1">
         <div

@@ -5,6 +5,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import KeyboardVoiceOutlinedIcon from "@mui/icons-material/KeyboardVoiceOutlined";
 import useThemeColor from "@/hooks/useThemeColor";
 import Fileupload from "./Fileupload";
+import AssetsFileUpload from "./AssetsFileUpload";
 
 export default function Uploadbutton() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
@@ -100,8 +101,11 @@ export default function Uploadbutton() {
         </Button>{" "}
       </Grid2>
 
-      {UploadOpen && (
+      {/* {UploadOpen && (
         <Fileupload UploadOpen={UploadOpen} setUploadOpen={setUploadOpen} />
+      )} */}
+      {UploadOpen && (
+        <AssetsFileUpload UploadOpen={UploadOpen} setUploadOpen={setUploadOpen} />
       )}
     </>
   );

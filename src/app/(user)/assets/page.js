@@ -1,10 +1,7 @@
 "use client";
 import useThemeColor from "@/hooks/useThemeColor";
 import {
-  Autocomplete,
-  Avatar,
-  Button,
-  ButtonGroup,
+
   Grid2,
   IconButton,
   InputAdornment,
@@ -13,9 +10,6 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import KeyboardVoiceOutlinedIcon from "@mui/icons-material/KeyboardVoiceOutlined";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -28,7 +22,7 @@ export default function page() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
 
   //usestate
-  const [Search, setSearch] = useState("");
+  const [Search, setSearch] = useState('');
   const [Tags, setTags] = useState([
     {
       _id: 1,
