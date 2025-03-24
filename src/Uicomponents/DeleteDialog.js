@@ -26,6 +26,7 @@ export default function DeleteDialog({ DeleteOpen, setDeleteOpen, detail }) {
       return;
     }
     setDeleteOpen(false);
+    detail.functionclose();
   };
   return (
     <Dialog
@@ -68,21 +69,23 @@ export default function DeleteDialog({ DeleteOpen, setDeleteOpen, detail }) {
         </Grid2>
       </DialogTitle>
       <DialogContent sx={{ py: 2, px: 2 }}>
-        <Grid2 container sx={{justifyContent:"center"}}>
-          <Grid2 size={12} sx={{justifyContent:"center",display:'flex'}} >
-        <Image
-                        src={DeleteGif}
-                        width={150}
-                        height={150}
-                        alt="Main Image"
-                        priority
-                      />
-                      </Grid2>
-        <Typography component="div">
-          Do You want To Delete{" "}
-          <span style={{ color: primary, fontWeight: 500 }}>{detail?.key ?? '-'} </span>{" "}
-          ?
-        </Typography>
+        <Grid2 container sx={{ justifyContent: "center" }}>
+          <Grid2 size={12} sx={{ justifyContent: "center", display: "flex" }}>
+            <Image
+              src={DeleteGif}
+              width={150}
+              height={150}
+              alt="Main Image"
+              priority
+            />
+          </Grid2>
+          <Typography component="div">
+            Do You want To Delete{" "}
+            <span style={{ color: primary, fontWeight: 500 }}>
+              {detail?.key ?? "-"}{" "}
+            </span>{" "}
+            ?
+          </Typography>
         </Grid2>
       </DialogContent>
       <DialogActions
@@ -99,7 +102,10 @@ export default function DeleteDialog({ DeleteOpen, setDeleteOpen, detail }) {
               background: "red",
               ":hover": { background: "red" },
             }}
-            onClick={() => setDeleteOpen(false)}
+            onClick={() => {
+              setDeleteOpen(false);
+              detail.functionclose();
+            }}
           >
             Cancel
           </Button>

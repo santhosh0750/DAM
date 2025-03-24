@@ -23,3 +23,7 @@ export const AddProject = (payload) => {
 export const AddCustomer = (payload) => {
   return axiosInstance.post("/customer/add", payload);
 };
+
+export const AddCustomerGroup = (payload) => {
+  return axiosInstance.post("/customerGroup/add", payload);
+};

@@ -9,6 +9,7 @@ import AssetsFileUpload from "./AssetsFileUpload";
 
 export default function Uploadbutton() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
+
   const [UploadOpen, setUploadOpen] = useState(false);
 
   return (
@@ -105,7 +106,10 @@ export default function Uploadbutton() {
         <Fileupload UploadOpen={UploadOpen} setUploadOpen={setUploadOpen} />
       )} */}
       {UploadOpen && (
-        <AssetsFileUpload UploadOpen={UploadOpen} setUploadOpen={setUploadOpen} />
+        <AssetsFileUpload
+          UploadOpen={UploadOpen}
+          setUploadOpen={setUploadOpen}
+        />
       )}
     </>
   );

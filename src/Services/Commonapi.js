@@ -19,3 +19,10 @@ export const PreSignedUrlAPI = (data, payload) => {
     },
   });
 };
+export const folderlistAPI = (data) => {
+  return axiosInstance.get("/folder/getAllFolder");
+};
+
+export const folderdataAPI = (data) => {
+  return axiosInstance.get("/folder/viewFolder", data);
+};

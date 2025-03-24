@@ -20,6 +20,7 @@ import Customergroup from "./componets/Customergroup";
 import Collection from "./componets/Collection";
 import Team from "./componets/Team";
 import Role from "./componets/Role";
+import Doctypelist from "./componets/Doctypelist";
 
 export default function page() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
@@ -46,6 +47,7 @@ export default function page() {
         <Collection />
         <Team />
         <Role />
+        <Doctypelist />
       </Grid2>
     </Grid2>
   );

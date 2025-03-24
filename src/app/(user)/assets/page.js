@@ -1,7 +1,6 @@
 "use client";
 import useThemeColor from "@/hooks/useThemeColor";
 import {
-
   Grid2,
   IconButton,
   InputAdornment,
@@ -22,7 +21,7 @@ export default function page() {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
 
   //usestate
-  const [Search, setSearch] = useState('');
+  const [Search, setSearch] = useState("");
   const [Tags, setTags] = useState([
     {
       _id: 1,

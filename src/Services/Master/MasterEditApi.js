@@ -19,3 +19,7 @@ export const UserEdit = (payload) => {
 export const ProjectEdit = (payload) => {
   return axiosInstance.post("/project/updateProject", payload);
 };
+
+export const CustomerGroupEdit = (payload) => {
+  return axiosInstance.post("/customerGroup/update", payload);
+};

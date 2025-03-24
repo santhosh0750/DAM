@@ -16,148 +16,169 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import useThemeColor from "@/hooks/useThemeColor";
+import {
+  CustomerlistAPI,
+  UsergrouplistAPI,
+} from "@/Services/Master/MasterlistApi";
+import { UserlistAPI } from "@/Services/Commonapi";
+import { AddCustomerGroup } from "@/Services/Master/MasterAddApi";
+import { toast } from "react-toastify";
+import { CustomerGroupEdit } from "@/Services/Master/MasterEditApi";
 
-export default function Customergroupdailog({ Addopen, setAddopen }) {
+export default function Customergroupdailog({
+  Addopen,
+  setAddopen,
+  EditData,
+  setEditData,
+}) {
   const { primary, secondary, text, textsecondary, optional } = useThemeColor();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const CustomPopper = (props) => <Popper {...props} placement="top-start" />;
+  const closefun = () => {
+    setCustomerGroupName("");
+    setCustomerSelected([]);
+    setUserGroupSelected([]);
+    setUserSelected([]);
+    setEditData("");
+  };
   const handleClose = (event, reason) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
       return;
     }
     setAddopen(false);
+    setEditData("");
+    closefun();
   };
-  const top100Films = [
-    { label: "The Shawshank Redemption", year: 1994 },
-    { label: "The Godfather", year: 1972 },
-    { label: "The Godfather: Part II", year: 1974 },
-    { label: "The Dark Knight", year: 2008 },
-    { label: "12 Angry Men", year: 1957 },
-    { label: "Schindler's List", year: 1993 },
-    { label: "Pulp Fiction", year: 1994 },
-    {
-      label: "The Lord of the Rings: The Return of the King",
-      year: 2003,
-    },
-    { label: "The Good, the Bad and the Ugly", year: 1966 },
-    { label: "Fight Club", year: 1999 },
-    {
-      label: "The Lord of the Rings: The Fellowship of the Ring",
-      year: 2001,
-    },
-    {
-      label: "Star Wars: Episode V - The Empire Strikes Back",
-      year: 1980,
-    },
-    { label: "Forrest Gump", year: 1994 },
-    { label: "Inception", year: 2010 },
-    {
-      label: "The Lord of the Rings: The Two Towers",
-      year: 2002,
-    },
-    { label: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { label: "Goodfellas", year: 1990 },
-    { label: "The Matrix", year: 1999 },
-    { label: "Seven Samurai", year: 1954 },
-    {
-      label: "Star Wars: Episode IV - A New Hope",
-      year: 1977,
-    },
-    { label: "City of God", year: 2002 },
-    { label: "Se7en", year: 1995 },
-    { label: "The Silence of the Lambs", year: 1991 },
-    { label: "It's a Wonderful Life", year: 1946 },
-    { label: "Life Is Beautiful", year: 1997 },
-    { label: "The Usual Suspects", year: 1995 },
-    { label: "Léon: The Professional", year: 1994 },
-    { label: "Spirited Away", year: 2001 },
-    { label: "Saving Private Ryan", year: 1998 },
-    { label: "Once Upon a Time in the West", year: 1968 },
-    { label: "American History X", year: 1998 },
-    { label: "Interstellar", year: 2014 },
-    { label: "Casablanca", year: 1942 },
-    { label: "City Lights", year: 1931 },
-    { label: "Psycho", year: 1960 },
-    { label: "The Green Mile", year: 1999 },
-    { label: "The Intouchables", year: 2011 },
-    { label: "Modern Times", year: 1936 },
-    { label: "Raiders of the Lost Ark", year: 1981 },
-    { label: "Rear Window", year: 1954 },
-    { label: "The Pianist", year: 2002 },
-    { label: "The Departed", year: 2006 },
-    { label: "Terminator 2: Judgment Day", year: 1991 },
-    { label: "Back to the Future", year: 1985 },
-    { label: "Whiplash", year: 2014 },
-    { label: "Gladiator", year: 2000 },
-    { label: "Memento", year: 2000 },
-    { label: "The Prestige", year: 2006 },
-    { label: "The Lion King", year: 1994 },
-    { label: "Apocalypse Now", year: 1979 },
-    { label: "Alien", year: 1979 },
-    { label: "Sunset Boulevard", year: 1950 },
-    {
-      label:
-        "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
-      year: 1964,
-    },
-    { label: "The Great Dictator", year: 1940 },
-    { label: "Cinema Paradiso", year: 1988 },
-    { label: "The Lives of Others", year: 2006 },
-    { label: "Grave of the Fireflies", year: 1988 },
-    { label: "Paths of Glory", year: 1957 },
-    { label: "Django Unchained", year: 2012 },
-    { label: "The Shining", year: 1980 },
-    { label: "WALL·E", year: 2008 },
-    { label: "American Beauty", year: 1999 },
-    { label: "The Dark Knight Rises", year: 2012 },
-    { label: "Princess Mononoke", year: 1997 },
-    { label: "Aliens", year: 1986 },
-    { label: "Oldboy", year: 2003 },
-    { label: "Once Upon a Time in America", year: 1984 },
-    { label: "Witness for the Prosecution", year: 1957 },
-    { label: "Das Boot", year: 1981 },
-    { label: "Citizen Kane", year: 1941 },
-    { label: "North by Northwest", year: 1959 },
-    { label: "Vertigo", year: 1958 },
-    {
-      label: "Star Wars: Episode VI - Return of the Jedi",
-      year: 1983,
-    },
-    { label: "Reservoir Dogs", year: 1992 },
-    { label: "Braveheart", year: 1995 },
-    { label: "M", year: 1931 },
-    { label: "Requiem for a Dream", year: 2000 },
-    { label: "Amélie", year: 2001 },
-    { label: "A Clockwork Orange", year: 1971 },
-    { label: "Like Stars on Earth", year: 2007 },
-    { label: "Taxi Driver", year: 1976 },
-    { label: "Lawrence of Arabia", year: 1962 },
-    { label: "Double Indemnity", year: 1944 },
-    {
-      label: "Eternal Sunshine of the Spotless Mind",
-      year: 2004,
-    },
-    { label: "Amadeus", year: 1984 },
-    { label: "To Kill a Mockingbird", year: 1962 },
-    { label: "Toy Story 3", year: 2010 },
-    { label: "Logan", year: 2017 },
-    { label: "Full Metal Jacket", year: 1987 },
-    { label: "Dangal", year: 2016 },
-    { label: "The Sting", year: 1973 },
-    { label: "2001: A Space Odyssey", year: 1968 },
-    { label: "Singin' in the Rain", year: 1952 },
-    { label: "Toy Story", year: 1995 },
-    { label: "Bicycle Thieves", year: 1948 },
-    { label: "The Kid", year: 1921 },
-    { label: "Inglourious Basterds", year: 2009 },
-    { label: "Snatch", year: 2000 },
-    { label: "3 Idiots", year: 2009 },
-    { label: "Monty Python and the Holy Grail", year: 1975 },
-  ];
-  const CustomPopper = (props) => <Popper {...props} placement="top-start" />;
+
+  const [CustomerGroupName, setCustomerGroupName] = useState("");
+  const [CustomerList, setCustomerList] = useState([]);
+  const [CustomerSelected, setCustomerSelected] = useState([]);
+  const [UserGroupList, setUserGroupList] = useState([]);
+  const [UserGroupSelected, setUserGroupSelected] = useState([]);
+  const [UserList, setUserList] = useState([]);
+  const [UserSelected, setUserSelected] = useState([]);
+  const [UsertGroupfoucs, setUsertGroupfoucs] = useState(false);
+
+  //apis
+  const customerlistapi = async () => {
+    const { data } = await CustomerlistAPI();
+    if (data.status == "success") {
+      setCustomerList(data.message);
+      if (EditData) {
+        setCustomerSelected(EditData.customerId);
+      }
+    } else {
+      setCustomerList([]);
+    }
+  };
+  const UserGroupapi = async () => {
+    const { data } = await UsergrouplistAPI();
+    if (data.status == "success") {
+      setUserGroupList(data.message);
+      if (EditData) {
+        setUserGroupSelected(EditData.userGroup);
+      }
+    } else {
+      setUserGroupList([]);
+    }
+  };
+  const UserListapi = async () => {
+    const { data } = await UserlistAPI();
+    if (data.status == "success") {
+      setUserList(data.message);
+      if (EditData) {
+        setUserSelected(EditData.userId);
+      }
+    } else {
+      setUserList([]);
+    }
+  };
+
+  const CustomerGroupaddapi = async () => {
+    const validations = [
+      {
+        condition: !CustomerGroupName.trim(),
+        message: "Please fill the Customer Group Name",
+      },
+      {
+        condition: CustomerSelected.length == 0,
+        message: "Please select the customers",
+      },
+      {
+        condition: UserGroupSelected.length == 0,
+        message: "Please select the User Group",
+      },
+    ];
+    const invalid = validations.find(({ condition }) => condition);
+    if (invalid) {
+      toast.error(invalid.message);
+      return;
+    }
+    const { data } = await AddCustomerGroup({
+      groupName: CustomerGroupName,
+      userGroup: UserGroupSelected.map((item) => item._id),
+      customerId: CustomerSelected.map((item) => item._id),
+      userId: UserSelected.map((item) => item._id),
+    });
+    if (data.status == "success") {
+      toast.success("Customer Group added successfully");
+      setAddopen(false);
+      setEditData("");
+      closefun();
+    } else {
+      toast.error(data.message);
+    }
+  };
+  const Customereditapi = async () => {
+    const validations = [
+      {
+        condition: !CustomerGroupName.trim(),
+        message: "Please fill the Customer Group Name",
+      },
+      {
+        condition: CustomerSelected.length == 0,
+        message: "Please select the customers",
+      },
+      {
+        condition: UserGroupSelected.length == 0,
+        message: "Please select the User Group",
+      },
+    ];
+    const invalid = validations.find(({ condition }) => condition);
+    if (invalid) {
+      toast.error(invalid.message);
+      return;
+    }
+    const { data } = await CustomerGroupEdit({
+      id: EditData._id,
+      groupName: CustomerGroupName,
+      userGroup: UserGroupSelected.map((item) => item._id),
+      customerId: CustomerSelected.map((item) => item._id),
+      userId: UserSelected.map((item) => item._id),
+    });
+    if (data.status == "success") {
+      toast.success(data.message);
+      setAddopen(false);
+      setEditData("");
+      closefun();
+    } else {
+      toast.error(data.message);
+    }
+  };
+
+  useEffect(() => {
+    customerlistapi();
+    UserGroupapi();
+    UserListapi();
+    if (EditData) {
+      setCustomerGroupName(EditData.groupName);
+    }
+  }, []);
+
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -186,13 +207,9 @@ export default function Customergroupdailog({ Addopen, setAddopen }) {
             borderBottomColor: primary,
           }}
         >
-          <Typography
-            variant="h6"
-            color={primary}
-            sx={{ fontSmooth: 1, fontWeight: 700 }}
-          >
+          <Typography color={primary} sx={{ fontSize: 16, fontWeight: 600 }}>
             {" "}
-            Add Group
+            {EditData ? "Edit" : "Add"} Group
           </Typography>
           <IconButton onClick={handleClose}>
             <CancelRoundedIcon sx={{ color: primary }} />
@@ -205,18 +222,78 @@ export default function Customergroupdailog({ Addopen, setAddopen }) {
           label="Group Name"
           fullWidth
           size="small"
+          sx={{ mt: 0.6 }}
+          value={CustomerGroupName}
+          onChange={(e) => setCustomerGroupName(e.target.value)}
         />
         <Autocomplete
           disablePortal
           fullWidth
+          multiple
           sx={{
             mt: 1,
           }}
-          options={top100Films}
-          PopperComponent={CustomPopper}
+          options={CustomerList}
+          getOptionLabel={(option) => option.name}
+          getOptionKey={(option) => option._id}
           renderInput={(params) => (
             <TextField {...params} label="Select Customers" size="small" />
           )}
+          value={CustomerSelected}
+          onChange={(event, newValue) => {
+            setCustomerSelected(newValue);
+          }}
+        />
+        <Autocomplete
+          disablePortal
+          fullWidth
+          multiple
+          sx={{
+            mt: 1,
+          }}
+          options={UserGroupList}
+          getOptionLabel={(option) => option.groupName}
+          getOptionKey={(option) => option._id}
+          renderInput={(params) => (
+            <TextField {...params} label="Select User Group" size="small" />
+          )}
+          value={UserGroupSelected}
+          onChange={(event, newValue) => {
+            setUserGroupSelected(newValue);
+          }}
+        />
+
+        <Autocomplete
+          disablePortal
+          fullWidth
+          multiple
+          onFocus={() => setUsertGroupfoucs(true)}
+          onBlur={() => setUsertGroupfoucs(false)}
+          sx={{
+            mt: 1,
+          }}
+          options={UserList}
+          getOptionLabel={(option) => option.name}
+          getOptionKey={(option) => option._id}
+          slots={{
+            popper: CustomPopper,
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Select Users"
+              size="small"
+              helperText={
+                UsertGroupfoucs
+                  ? "If you want to add users apart from the UserGroup, add them here"
+                  : ""
+              }
+            />
+          )}
+          value={UserSelected}
+          onChange={(event, newValue) => {
+            setUserSelected(newValue);
+          }}
         />
       </DialogContent>
       <DialogActions
@@ -229,8 +306,14 @@ export default function Customergroupdailog({ Addopen, setAddopen }) {
         }}
       >
         <Grid2 container spacing={1}>
-          <Button size="small" sx={{ px: 2, py: 1 }}>
-            Add Group
+          <Button
+            size="small"
+            sx={{ px: 2, py: 1 }}
+            onClick={() =>
+              EditData ? Customereditapi() : CustomerGroupaddapi()
+            }
+          >
+            {EditData ? "Edit" : "Add"} Group
           </Button>
         </Grid2>
       </DialogActions>

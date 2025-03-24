@@ -14,3 +14,7 @@ export const UserGroupdeleteAPI = (id) => {
 export const ProjectdeleteAPI = (id) => {
   return axiosInstance.get(`/project/deleteProject/${id}`);
 };
+
+export const CustomerdeleteAPI = (id) => {
+  return axiosInstance.get(`/customerGroup/delete/${id}`);
+};
